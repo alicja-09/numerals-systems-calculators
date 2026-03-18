@@ -8,16 +8,22 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
             min-height: 100vh;
             margin: 0;
-            background-color: #F0F0F0;
+            background-color: #f0f0f0;
             padding: 40px;
             box-sizing: border-box;
-            gap: 40px;
-       
         }
+        
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+            flex: 1;
+        }
+        
         
         .description {
             text-align: left;
@@ -148,61 +154,132 @@
             color: #6c757d;
             margin-top: 5px;
         }
+        
+        /* Footer z informacjami o systemach */
+        .info-footer {
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .info-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .info-grid {
+            display: flex;
+            gap: 40px;
+            justify-content: space-between;
+        }
+        
+        .info-item {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-item h3 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .info-item:last-child h3 {
+            color: #dc3545;
+        }
+        
+        .info-item p {
+            margin: 10px 0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .info-item strong {
+            color: #495057;
+        }
     </style>
 </head>
 <body>
-    <!-- Lewa kolumna - system binarny -->
-    <div class="container">
-        <div class="description">
-            <p>System binarny wykorzystuje tylko cyfry 0 i 1, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 2.</p>
+    <div class="main-content">
+        <!-- Lewa kolumna - system binarny -->
+        <div class="container">
+            <div class="description">
+                <p>System binarny wykorzystuje tylko cyfry 0 i 1, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 2.</p>
+            </div>
+            
+            <div class="converter">
+                <h2>Konwerter binarny</h2>
+                
+                <div class="input-group">
+                    <label for="binInput" id="binInputLabel">Podaj liczbę dziesiętną:</label>
+                    <input type="number" id="binInput" placeholder="Wpisz liczbę..." min="0" step="1">
+                    <div class="input-hint" id="binHint">Wprowadź liczbę całkowitą nieujemną</div>
+                </div>
+                
+                <div class="button-group">
+                    <button onclick="convertBinary()" id="binConvertBtn">Zamień na binarny</button>
+                    <button class="swap-button" onclick="swapBinaryConversion()">⇄ Odwróć</button>
+                </div>
+                
+                <div class="result" id="binResult">
+                    <div class="result-label" id="binResultLabel">Wynik w systemie binarnym:</div>
+                    <div class="binary-result" id="binOutput">---</div>
+                    <div class="error" id="binErrorMessage"></div>
+                </div>
+            </div>
         </div>
-        
-        <div class="converter">
-            <h2>Konwerter binarny</h2>
-            
-            <div class="input-group">
-                <label for="binInput" id="binInputLabel">Podaj liczbę dziesiętną:</label>
-                <input type="number" id="binInput" placeholder="Wpisz liczbę..." min="0" step="1">
-                <div class="input-hint" id="binHint">Wprowadź liczbę całkowitą nieujemną</div>
+
+        <!-- Prawa kolumna - system szesnastkowy -->
+        <div class="container">
+            <div class="description">
+                <p>System szesnastkowy wykorzystuje cyfry 0-9 oraz litery A-F, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 16.</p>
             </div>
             
-            <div class="button-group">
-                <button onclick="convertBinary()" id="binConvertBtn">Zamień na binarny</button>
-                <button class="swap-button" onclick="swapBinaryConversion()">⇄ Odwróć</button>
-            </div>
-            
-            <div class="result" id="binResult">
-                <div class="result-label" id="binResultLabel">Wynik w systemie binarnym:</div>
-                <div class="binary-result" id="binOutput">---</div>
-                <div class="error" id="binErrorMessage"></div>
+            <div class="converter">
+                <h2>Konwerter szesnastkowy</h2>
+                
+                <div class="input-group">
+                    <label for="hexInput" id="hexInputLabel">Podaj liczbę dziesiętną:</label>
+                    <input type="number" id="hexInput" placeholder="Wpisz liczbę..." min="0" step="1">
+                    <div class="input-hint" id="hexHint">Wprowadź liczbę całkowitą nieujemną</div>
+                </div>
+                
+                <div class="button-group">
+                    <button onclick="convertHex()" style="background-color: #dc3545;" id="hexConvertBtn">Zamień na szesnastkowy</button>
+                    <button class="swap-button" onclick="swapHexConversion()" style="background-color: #6c757d;">⇄ Odwróć</button>
+                </div>
+                
+                <div class="result" id="hexResult">
+                    <div class="result-label" id="hexResultLabel">Wynik w systemie szesnastkowym:</div>
+                    <div class="hex-result" id="hexOutput">---</div>
+                    <div class="error" id="hexErrorMessage"></div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Prawa kolumna - system szesnastkowy -->
-    <div class="container">
-        <div class="description">
-            <p>System szesnastkowy wykorzystuje cyfry 0-9 oraz litery A-F, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 16.</p>
-        </div>
-        
-        <div class="converter">
-            <h2>Konwerter szesnastkowy</h2>
-            
-            <div class="input-group">
-                <label for="hexInput" id="hexInputLabel">Podaj liczbę dziesiętną:</label>
-                <input type="number" id="hexInput" placeholder="Wpisz liczbę..." min="0" step="1">
-                <div class="input-hint" id="hexHint">Wprowadź liczbę całkowitą nieujemną</div>
+    
+    <!-- Footer z informacjami o systemach -->
+    <div class="info-footer">
+        <div class="info-title"> O systemach liczbowych</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <h3>System binarny</h3>
+                <p><strong>Zastosowanie:</strong> Podstawa działania wszystkich komputerów i procesorów - reprezentacja danych, wykonywanie obliczeń, przechowywanie informacji w pamięci RAM i na dyskach.</p>
+                <p><strong>Pochodzenie:</strong> Wywodzi się z XVII-wiecznych prac Gottfrieda Wilhelma Leibniza, który opracował system dwójkowy oparty na filozofii chińskiej księgi I-Ching.</p>
             </div>
-            
-            <div class="button-group">
-                <button onclick="convertHex()" style="background-color: #dc3545;" id="hexConvertBtn">Zamień na szesnastkowy</button>
-                <button class="swap-button" onclick="swapHexConversion()" style="background-color: #6c757d;">⇄ Odwróć</button>
-            </div>
-            
-            <div class="result" id="hexResult">
-                <div class="result-label" id="hexResultLabel">Wynik w systemie szesnastkowym:</div>
-                <div class="hex-result" id="hexOutput">---</div>
-                <div class="error" id="hexErrorMessage"></div>
+            <div class="info-item">
+                <h3>System szesnastkowy</h3>
+                <p><strong>Zastosowanie:</strong> Skrócony zapis danych binarnych w programowaniu (kolory w CSS/HTML, adresy pamięci, kody znaków Unicode), debugging, edytory heksadecymalne.</p>
+                <p><strong>Pochodzenie:</strong> Wprowadzony przez IBM w latach 60. XX wieku jako praktyczny sposób zapisu danych binarnych, ponieważ jedna cyfra szesnastkowa reprezentuje dokładnie 4 bity.</p>
             </div>
         </div>
     </div>
