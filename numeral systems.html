@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System binarny i szesnastkowy - konwertery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #F0F0F0;
+            padding: 40px;
+            box-sizing: border-box;
+            gap: 40px;
+       
+        }
+        
+        .description {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+        }
+        
+        .converter {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+            text-align: left;
+        }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"] {
+            font-family: 'Courier New', monospace;
+        }
+        
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            flex: 1;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .swap-button {
+            background-color: #6c757d;
+            flex: 0.5;
+        }
+        
+        .swap-button:hover {
+            background-color: #5a6268;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: left;
+        }
+        
+        .result-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .binary-result, .hex-result {
+            font-size: 2rem;
+            font-family: 'Courier New', monospace;
+            color: #28a745;
+            word-break: break-all;
+        }
+        
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        h2 {
+            margin-top: 0;
+            text-align: left;
+            color: #333;
+        }
+        
+        .hex-result {
+            color: #dc3545;
+        }
+        
+        .hex-button {
+            background-color: #dc3545;
+        }
+        
+        .hex-button:hover {
+            background-color: #b02a37;
+        }
+        
+        .input-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lewa kolumna - system binarny -->
+    <div class="container">
+        <div class="description">
+            <p>System binarny wykorzystuje tylko cyfry 0 i 1, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 2.</p>
+        </div>
+        
+        <div class="converter">
+            <h2>Konwerter binarny</h2>
+            
+            <div class="input-group">
+                <label for="binInput" id="binInputLabel">Podaj liczbę dziesiętną:</label>
+                <input type="number" id="binInput" placeholder="Wpisz liczbę..." min="0" step="1">
+                <div class="input-hint" id="binHint">Wprowadź liczbę całkowitą nieujemną</div>
+            </div>
+            
+            <div class="button-group">
+                <button onclick="convertBinary()" id="binConvertBtn">Zamień na binarny</button>
+                <button class="swap-button" onclick="swapBinaryConversion()">⇄ Odwróć</button>
+            </div>
+            
+            <div class="result" id="binResult">
+                <div class="result-label" id="binResultLabel">Wynik w systemie binarnym:</div>
+                <div class="binary-result" id="binOutput">---</div>
+                <div class="error" id="binErrorMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prawa kolumna - system szesnastkowy -->
+    <div class="container">
+        <div class="description">
+            <p>System szesnastkowy wykorzystuje cyfry 0-9 oraz litery A-F, gdzie każda pozycja cyfry reprezentuje kolejną potęgę liczby 16.</p>
+        </div>
+        
+        <div class="converter">
+            <h2>Konwerter szesnastkowy</h2>
+            
+            <div class="input-group">
+                <label for="hexInput" id="hexInputLabel">Podaj liczbę dziesiętną:</label>
+                <input type="number" id="hexInput" placeholder="Wpisz liczbę..." min="0" step="1">
+                <div class="input-hint" id="hexHint">Wprowadź liczbę całkowitą nieujemną</div>
+            </div>
+            
+            <div class="button-group">
+                <button onclick="convertHex()" style="background-color: #dc3545;" id="hexConvertBtn">Zamień na szesnastkowy</button>
+                <button class="swap-button" onclick="swapHexConversion()" style="background-color: #6c757d;">⇄ Odwróć</button>
+            </div>
+            
+            <div class="result" id="hexResult">
+                <div class="result-label" id="hexResultLabel">Wynik w systemie szesnastkowym:</div>
+                <div class="hex-result" id="hexOutput">---</div>
+                <div class="error" id="hexErrorMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System binarny - zarządzanie trybem
+        let isBinDecToBin = true; // true: dziesiętny → binarny, false: binarny → dziesiętny
+        
+        function swapBinaryConversion() {
+            isBinDecToBin = !isBinDecToBin;
+            updateBinaryUI();
+            // Wyczyść poprzedni wynik
+            document.getElementById('binOutput').textContent = '---';
+            document.getElementById('binErrorMessage').textContent = '';
+        }
+        
+        function updateBinaryUI() {
+            const binInput = document.getElementById('binInput');
+            const binInputLabel = document.getElementById('binInputLabel');
+            const binConvertBtn = document.getElementById('binConvertBtn');
+            const binHint = document.getElementById('binHint');
+            
+            if (isBinDecToBin) {
+                binInput.type = 'number';
+                binInput.placeholder = 'Wpisz liczbę dziesiętną...';
+                binInput.min = '0';
+                binInput.step = '1';
+                binInputLabel.textContent = 'Podaj liczbę dziesiętną:';
+                binConvertBtn.textContent = 'Zamień na binarny';
+                binHint.textContent = 'Wprowadź liczbę całkowitą nieujemną';
+            } else {
+                binInput.type = 'text';
+                binInput.placeholder = 'Wpisz liczbę binarną (tylko 0 i 1)...';
+                binInput.removeAttribute('min');
+                binInput.removeAttribute('step');
+                binInputLabel.textContent = 'Podaj liczbę binarną:';
+                binConvertBtn.textContent = 'Zamień na dziesiętny';
+                binHint.textContent = 'Używaj tylko cyfr 0 i 1';
+            }
+        }
+        
+        function convertBinary() {
+            const binInput = document.getElementById('binInput');
+            const binOutput = document.getElementById('binOutput');
+            const errorMessage = document.getElementById('binErrorMessage');
+            const binResultLabel = document.getElementById('binResultLabel');
+            
+            let input = binInput.value.trim();
+            errorMessage.textContent = '';
+            
+            if (input === '') {
+                errorMessage.textContent = 'Wprowadź liczbę!';
+                binOutput.textContent = '---';
+                return;
+            }
+            
+            if (isBinDecToBin) {
+                // Konwersja dziesiętny → binarny
+                const decimal = parseInt(input, 10);
+                
+                if (isNaN(decimal) || decimal < 0) {
+                    errorMessage.textContent = 'Wprowadź dodatnią liczbę całkowitą!';
+                    binOutput.textContent = '---';
+                    return;
+                }
+                
+                if (decimal === 0) {
+                    binOutput.textContent = '0';
+                } else {
+                    let binary = '';
+                    let number = decimal;
+                    
+                    while (number > 0) {
+                        binary = (number % 2) + binary;
+                        number = Math.floor(number / 2);
+                    }
+                    
+                    binOutput.textContent = binary;
+                }
+                binResultLabel.textContent = 'Wynik w systemie binarnym:';
+            } else {
+                // Konwersja binarny → dziesiętny
+                if (!/^[01]+$/.test(input)) {
+                    errorMessage.textContent = 'Liczba binarna może zawierać tylko cyfry 0 i 1!';
+                    binOutput.textContent = '---';
+                    return;
+                }
+                
+                let decimal = 0;
+                for (let i = 0; i < input.length; i++) {
+                    decimal = decimal * 2 + parseInt(input[i], 10);
+                }
+                
+                binOutput.textContent = decimal;
+                binResultLabel.textContent = 'Wynik w systemie dziesiętnym:';
+            }
+        }
+        
+        // System szesnastkowy - zarządzanie trybem
+        let isHexDecToHex = true; // true: dziesiętny → szesnastkowy, false: szesnastkowy → dziesiętny
+        
+        function swapHexConversion() {
+            isHexDecToHex = !isHexDecToHex;
+            updateHexUI();
+            // Wyczyść poprzedni wynik
+            document.getElementById('hexOutput').textContent = '---';
+            document.getElementById('hexErrorMessage').textContent = '';
+        }
+        
+        function updateHexUI() {
+            const hexInput = document.getElementById('hexInput');
+            const hexInputLabel = document.getElementById('hexInputLabel');
+            const hexConvertBtn = document.getElementById('hexConvertBtn');
+            const hexHint = document.getElementById('hexHint');
+            
+            if (isHexDecToHex) {
+                hexInput.type = 'number';
+                hexInput.placeholder = 'Wpisz liczbę dziesiętną...';
+                hexInput.min = '0';
+                hexInput.step = '1';
+                hexInputLabel.textContent = 'Podaj liczbę dziesiętną:';
+                hexConvertBtn.textContent = 'Zamień na szesnastkowy';
+                hexHint.textContent = 'Wprowadź liczbę całkowitą nieujemną';
+            } else {
+                hexInput.type = 'text';
+                hexInput.placeholder = 'Wpisz liczbę szesnastkową (0-9, A-F)...';
+                hexInput.removeAttribute('min');
+                hexInput.removeAttribute('step');
+                hexInputLabel.textContent = 'Podaj liczbę szesnastkową:';
+                hexConvertBtn.textContent = 'Zamień na dziesiętny';
+                hexHint.textContent = 'Używaj cyfr 0-9 i liter A-F (wielkość liter nie ma znaczenia)';
+            }
+        }
+        
+        function convertHex() {
+            const hexInput = document.getElementById('hexInput');
+            const hexOutput = document.getElementById('hexOutput');
+            const errorMessage = document.getElementById('hexErrorMessage');
+            const hexResultLabel = document.getElementById('hexResultLabel');
+            
+            let input = hexInput.value.trim();
+            errorMessage.textContent = '';
+            
+            if (input === '') {
+                errorMessage.textContent = 'Wprowadź liczbę!';
+                hexOutput.textContent = '---';
+                return;
+            }
+            
+            if (isHexDecToHex) {
+                // Konwersja dziesiętny → szesnastkowy
+                const decimal = parseInt(input, 10);
+                
+                if (isNaN(decimal) || decimal < 0) {
+                    errorMessage.textContent = 'Wprowadź dodatnią liczbę całkowitą!';
+                    hexOutput.textContent = '---';
+                    return;
+                }
+                
+                if (decimal === 0) {
+                    hexOutput.textContent = '0';
+                } else {
+                    let hex = '';
+                    let number = decimal;
+                    const hexDigits = '0123456789ABCDEF';
+                    
+                    while (number > 0) {
+                        hex = hexDigits[number % 16] + hex;
+                        number = Math.floor(number / 16);
+                    }
+                    
+                    hexOutput.textContent = hex;
+                }
+                hexResultLabel.textContent = 'Wynik w systemie szesnastkowym:';
+            } else {
+                // Konwersja szesnastkowy → dziesiętny
+                input = input.toUpperCase();
+                if (!/^[0-9A-F]+$/.test(input)) {
+                    errorMessage.textContent = 'Liczba szesnastkowa może zawierać tylko cyfry 0-9 i litery A-F!';
+                    hexOutput.textContent = '---';
+                    return;
+                }
+                
+                let decimal = 0;
+                for (let i = 0; i < input.length; i++) {
+                    const char = input[i];
+                    let value;
+                    if (char >= '0' && char <= '9') {
+                        value = parseInt(char, 10);
+                    } else {
+                        value = 10 + (char.charCodeAt(0) - 'A'.charCodeAt(0));
+                    }
+                    decimal = decimal * 16 + value;
+                }
+                
+                hexOutput.textContent = decimal;
+                hexResultLabel.textContent = 'Wynik w systemie dziesiętnym:';
+            }
+        }
+        
+        // Obsługa klawisza Enter
+        document.getElementById('binInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                convertBinary();
+            }
+        });
+        
+        document.getElementById('hexInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                convertHex();
+            }
+        });
+        
+        // Inicjalizacja
+        updateBinaryUI();
+        updateHexUI();
+    </script>
+</body>
+</html>
